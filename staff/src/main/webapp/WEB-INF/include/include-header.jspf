@@ -1,0 +1,19 @@
+<%@ page pageEncoding="utf-8"%>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>bloggers</title>
+<!-- prefix 속성은 url에 명시된 값 대신 해당페이지 에선 prefix로 명시된 값을 사용하겟다는 의미 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- JSTL functions 에서 제공하는 각종 함수를 사용해서 문자열이나 콜렉션들을 처리한다 -->
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui" %>
+
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/ui.css'/>" />
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="<c:url value='/js/common.js'/>" charset="utf-8"></script>
+
+

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample">
+	
+	<select id="staffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	 
+	  	 	SELECT
+	    	   CNC_IDX,
+	    	   CNC_NAME,
+	    	   CNC_GEN,
+	    	   CNC_TYPE,
+	    	   CNC_DATE,
+	    	   CNC_GRADE,
+	    	   CNC_SEQ
+	    	FROM
+	    	   TEST_STAFF
+	    	   WHERE 1=1
+	    	   <if test='CNC_NAME !="" and CNC_NAME !=null'>
+	    	   AND CNC_NAME like '%'||#{CNC_NAME}||'%'
+	    	   </if>
+	    	    <if test='CNC_GEN !="" and CNC_GEN !=null'>
+	    	   AND CNC_GEN = #{CNC_GEN}
+	    	   </if>
+	    	ORDER BY CNC_IDX DESC
+	
+	</select>
+
+	
+<!-- 	<insert id="insertBoard" parameterType="java.util.HashMap"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			INSERT INTO TEST_EMPLOYEES -->
+<!-- 			( -->
+<!-- 				CNC_ID, -->
+<!-- 			    CNC_PWD -->
+<!-- 			) -->
+<!-- 			VALUES -->
+<!-- 			( -->
+<!-- 				#{cnc_id},  -->
+<!-- 			    #{cnc_pwd}  -->
+<!-- 			) -->
+<!-- 		]]> -->
+<!-- 	</insert> -->
+
+    
+	<insert id="insertBoard" parameterType="first.sample.dto.EmployeesDTO">
+		<![CDATA[
+			INSERT INTO TEST_EMPLOYEES 
+			
+			( 
+				CNC_ID,
+			    CNC_PWD,
+			   	CNC_DEP,
+	  			CNC_IRUM,
+	  		    CNC_GEN,
+	            CNC_DATE,
+	  		    CNC_PHONE,
+	 	        CNC_EMAIL,
+	 	        FLAG
+			) 
+			VALUES 
+			( 
+				#{CNC_ID}
+ 			    , #{CNC_PWD}
+ 			    , #{CNC_DEP}
+ 			    , #{CNC_IRUM}
+ 			    , #{CNC_GEN}
+ 			    , #{CNC_DATE}
+ 			    , #{CNC_PHONE}
+ 			    , #{CNC_EMAIL} ||'@'|| #{CNC_DOMAIN}
+ 			    , 'N'
+ 			    
+ 			) 
+ 		]]> 
+	</insert>
+	
+	
+	<insert id="intoBoard" parameterType="first.sample.dto.StaffDTO">
+	  INSERT INTO TEST_STAFF
+	   (
+	     CNC_IDX
+	     , CNC_NAME
+	     , CNC_GEN
+	     , CNC_TYPE
+	     , CNC_DATE
+	     , CNC_GRADE
+	     , CNC_SKILL
+	     , CNC_JOMIN
+	     , CNC_SEQ
+	   )
+	   VALUES
+	   (
+	    #{CNC_IDX}
+	    , #{CNC_NAME}
+	    , #{CNC_GEN}
+	    , #{CNC_TYPE}
+	    , #{CNC_DATE}
+	    , #{CNC_GRADE}
+	    , #{CNC_SKILL}
+	    , #{CNC_JOMIN1} || #{CNC_JOMIN2}
+	    , CNC_SEQ.NEXTVAL
+	    
+	   )
+	
+	
+	</insert>
+	
+	
+	<select id="idCheck" parameterType="first.sample.dto.EmployeesDTO" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM TEST_EMPLOYEES WHERE CNC_ID = #{CNC_ID} AND CNC_PWD = #{CNC_PWD}
+ 		]]>
+ 		 
+	</select>
+
+    <select id="idConfirm" parameterType="String" resultType="int">
+        <![CDATA[
+             SELECT count(*) FROM TEST_EMPLOYEES WHERE CNC_ID = #{id}
+        ]]>
+    
+    </select>
+    
+     <select id="idAgree" parameterType="String" resultType="int">
+        <![CDATA[
+             SELECT COUNT(*) 
+             FROM TEST_EMPLOYEES 
+             WHERE 1=1
+             AND CNC_ID = #{ag}
+             AND FLAG = 'Y'
+        ]]>
+    
+    </select>
+
+	<update id="updateHitCnt" parameterType="hashmap">
+		<![CDATA[
+			UPDATE TB_BOARD 
+			SET
+				HIT_CNT = NVL(HIT_CNT, 0) + 1
+			WHERE
+				IDX = #{IDX}	
+		]]>
+	</update>
+	
+	<select id="selectBoardDetail" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				IDX,
+				HIT_CNT,
+				CREA_ID,
+				CREA_DTM,
+				TITLE,
+				CONTENTS
+			FROM
+				TB_BOARD
+			WHERE
+				IDX = #{IDX}		
+		]]>
+	</select>
+	
+	<update id="updateBoard" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE TEST_STAFF 
+			SET
+				CNC_IDX = #{CNC_IDX}
+				,CNC_NAME = #{CNC_NAME}
+				,CNC_GEN = #{CNC_GEN}
+				,CNC_TYPE = #{CNC_TYPE}
+				,CNC_DATE = #{CNC_DATE}
+				,CNC_GRADE = #{CNC_GRADE}
+				,CNC_SKILL = #{CNC_SKILL}
+				,CNC_JOMIN = #{CNC_JOMIN}
+				
+			WHERE
+				CNC_SEQ = #{CNC_SEQ}	
+		]]>
+	</update>
+	
+	<update id="deleteBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE TB_BOARD
+			SET
+				DEL_GB = 'Y'
+			WHERE
+				IDX = #{IDX}
+		]]>
+	</update>
+</mapper>

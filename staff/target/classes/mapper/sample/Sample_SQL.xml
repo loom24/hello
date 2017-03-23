@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample">
+	
+	<select id="staffList" resultType="staff.sample.dto.StaffDTO">
+	 
+
+	    	SELECT
+	    	   ROWNUM,
+	    	   CNC_NAME,
+	    	   CNC_GEN,
+	    	   CNC_TYPE,
+	    	   CNC_DATE,
+	    	   CNC_GRADE,
+	    	   CNC_SKILL,
+	    	   CNC_JOMIN,
+	    	   CNC_SEQ
+	    	 FROM(
+	    	 SELECT A.*, ROWNUM AS RN
+	    	 FROM(
+	    	  SELECT
+	    	   ROWNUM,
+	    	   CNC_NAME,
+	    	   CNC_GEN,
+	    	   CNC_TYPE,
+	    	   to_char(CNC_DATE, 'yyyy-mm-dd') as CNC_DATE,
+	    	   CNC_GRADE,
+	    	   CNC_SKILL,
+	    	   CNC_JOMIN,
+	    	   CNC_SEQ
+ 	    	  FROM TEST_STAFF
+ 	    	  WHERE 1=1
+ 	    	  <if test='CNC_NAME !="" and CNC_NAME !=null'>
+	    	   AND CNC_NAME like '%'||#{CNC_NAME}||'%'
+	    	   </if>
+     	       ORDER BY CNC_DATE
+	    	   )A
+	    	  )
+
+	    	 WHERE RN BETWEEN #{start} AND #{end}
+<!-- 	    	   <if test='CNC_NAME !="" and CNC_NAME !=null'> -->
+<!-- 	    	   AND CNC_NAME like '%'||#{CNC_NAME}||'%' -->
+<!-- 	    	   </if> -->
+<!-- 	    	    <if test='CNC_GEN !="" and CNC_GEN !=null'> -->
+<!-- 	    	   AND CNC_GEN = #{CNC_GEN} -->
+<!-- 	    	   </if> -->
+	
+	</select>
+	
+	<select id="count" resultType="int">
+	   SELECT count(*) FROM TEST_STAFF
+	   WHERE CNC_NAME like '%'||#{CNC_NAME}||'%' 
+	
+	</select>
+
+	<insert id="insertBoard" parameterType="staff.sample.dto.StaffDTO">
+	  INSERT INTO TEST_STAFF
+	   (
+	     CNC_IDX
+	     , CNC_NAME
+	     , CNC_GEN
+	     , CNC_TYPE
+	     , CNC_DATE
+	     , CNC_GRADE
+	     , CNC_SKILL
+	     , CNC_JOMIN
+	     , CNC_SEQ
+	   )
+	   VALUES
+	   (
+	    #{CNC_IDX}
+	    , #{CNC_NAME}
+	    , #{CNC_GEN}
+	    , #{CNC_TYPE}
+	    , #{CNC_DATE}
+	    , #{CNC_GRADE}
+	    , #{CNC_SKILL}
+	    , #{CNC_JOMIN1} || #{CNC_JOMIN2}
+	    , CNC_SEQ.NEXTVAL
+	    
+	   )
+	
+	</insert>
+	
+	<select id="staffDetail" parameterType="int" resultType="staff.sample.dto.StaffDTO">
+	   
+	  	   SELECT
+	    	   CNC_IDX,
+	    	   CNC_NAME,
+	    	   CNC_GEN,
+	    	   CNC_TYPE,
+	    	   to_char(CNC_DATE, 'yyyy-mm-dd') as CNC_DATE,
+	    	   CNC_GRADE,
+	    	   CNC_SEQ,
+	    	   CNC_SKILL,
+	    	   CNC_JOMIN
+	    	FROM
+	    	   TEST_STAFF
+	    	WHERE
+	    	   CNC_SEQ = #{CNC_SEQ}
+	
+	</select>
+	
+	
+	<update id="updateBoard" parameterType="staff.sample.dto.StaffDTO">
+	
+			UPDATE TEST_STAFF 
+			SET
+				CNC_IDX = #{CNC_IDX}
+				,CNC_NAME = #{CNC_NAME}
+				,CNC_GEN = #{CNC_GEN}
+				,CNC_TYPE = #{CNC_TYPE}
+				,CNC_DATE = #{CNC_DATE}
+				,CNC_GRADE = #{CNC_GRADE}
+				,CNC_SKILL = #{CNC_SKILL}
+				,CNC_JOMIN = #{CNC_JOMIN1} || #{CNC_JOMIN2}
+				
+			WHERE
+				CNC_SEQ = #{CNC_SEQ}	
+				
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+	      DELETE FROM TEST_STAFF
+	      	WHERE
+				CNC_SEQ = #{CNC_SEQ}
+	
+	</delete>
+</mapper>
